@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { Mongoose } from 'mongoose';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Model } from 'mongoose';
 import { GetFilmDTO } from '../films/dto/films.dto';
-import Film from '../films/models/film';
+import { Film } from '../films/models/film';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class FilmsRepository {
-  constructor(private connection: Mongoose) {}
+  constructor(@InjectModel(Film.name) private filmModel: Model<Film>) {}
 
   private getFilmMapperFn(): (Film) => GetFilmDTO {
     return (root) => {
@@ -25,11 +26,20 @@ export class FilmsRepository {
   }
 
   async findAll(): Promise<{ total: number; items: GetFilmDTO[] }> {
-    const items = await Film.find({});
-    const total = await Film.countDocuments({});
+    const items = await this.filmModel.find({});
+    const total = items.length;
     return {
       total,
       items: items.map(this.getFilmMapperFn()),
     };
+  }
+
+  async findById(id: string): Promise<GetFilmDTO> {
+    try {
+      const film = await this.filmModel.findOne({ id });
+      return film;
+    } catch {
+      throw new NotFoundException(`Фильм с id ${id} не найден в БД`);
+    }
   }
 }
