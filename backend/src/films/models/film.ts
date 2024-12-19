@@ -1,28 +1,47 @@
-import mongoose, { Schema } from 'mongoose';
+import { SchemaFactory, Prop, Schema } from '@nestjs/mongoose';
 
-const ScheduleSchema = new Schema({
-  id: { type: String, required: true },
-  daytime: { type: String, required: true },
-  hall: { type: Number },
-  rows: { type: Number },
-  seats: { type: Number },
-  price: { type: Number },
-  taken: { type: [String], default: [] },
-});
+@Schema()
+export class Schedule {
+  @Prop({ require: true })
+  id: string;
+  @Prop()
+  daytime: string;
+  @Prop()
+  hall: number;
+  @Prop()
+  rows: number;
+  @Prop()
+  seats: number;
+  @Prop()
+  price: number;
+  @Prop({ type: [String], default: [] })
+  taken: string[];
+}
 
-const FilmSchema = new mongoose.Schema({
-  id: { type: String, required: true },
-  rating: { type: Number, required: true },
-  director: { type: String, required: true },
-  tags: { type: [String], required: true },
-  image: { type: String, required: true },
-  cover: { type: String, required: true },
-  title: { type: String, required: true },
-  about: { type: String, required: true },
-  description: { type: String, required: true },
-  schedule: { type: [ScheduleSchema], required: true },
-});
+const ScheduleSchema = SchemaFactory.createForClass(Schedule);
 
-const Film = mongoose.model('Film', FilmSchema);
+@Schema()
+export class Film {
+  @Prop({ require: true })
+  id: string;
+  @Prop()
+  rating: number;
+  @Prop()
+  director: string;
+  @Prop()
+  tags: string[];
+  @Prop()
+  image: string;
+  @Prop()
+  cover: string;
+  @Prop()
+  title: string;
+  @Prop()
+  about: string;
+  @Prop()
+  description: string;
+  @Prop({ type: [ScheduleSchema] })
+  schedule: Schedule[];
+}
 
-export default Film;
+export const FilmSchema = SchemaFactory.createForClass(Film);
