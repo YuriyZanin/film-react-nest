@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Model } from 'mongoose';
 import { GetFilmDTO } from '../films/dto/films.dto';
 import { Film } from '../films/models/film';
@@ -36,10 +40,27 @@ export class FilmsRepository {
 
   async findById(id: string): Promise<GetFilmDTO> {
     try {
-      const film = await this.filmModel.findOne({ id });
-      return film;
+      const film = await this.filmModel.findOne({ _id: id });
+      return this.getFilmMapperFn()(film);
     } catch {
       throw new NotFoundException(`Фильм с id ${id} не найден в БД`);
+    }
+  }
+
+  async takingSeat(
+    filmId: string,
+    sessionIndex: string,
+    place: string,
+  ): Promise<void> {
+    try {
+      await this.filmModel.updateOne(
+        { _id: filmId },
+        { $push: { [`schedule.${sessionIndex}.taken`]: place } },
+      );
+    } catch (error) {
+      new ConflictException(
+        'При сохранении данных о бронировании места произошли ошибки',
+      );
     }
   }
 }
