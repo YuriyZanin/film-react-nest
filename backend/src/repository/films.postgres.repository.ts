@@ -8,11 +8,14 @@ import { Film } from '../films/entities/film.entity';
 import { Repository } from 'typeorm';
 import { GetFilmDTO } from '../films/dto/films.dto';
 import { FilmsRepository } from './films.repository';
+import { Schedule } from '../films/entities/schedule.entity';
 
 @Injectable()
 export class FilmsPostgresRepository implements FilmsRepository {
   constructor(
     @InjectRepository(Film) private readonly filmsRepository: Repository<Film>,
+    @InjectRepository(Schedule)
+    private readonly scheduleRepository: Repository<Schedule>,
   ) {}
 
   private getFilmMapperFn(): (Film) => GetFilmDTO {
@@ -61,17 +64,15 @@ export class FilmsPostgresRepository implements FilmsRepository {
     place: string,
   ): Promise<void> {
     try {
-      const film = await this.filmsRepository.findOne({
-        where: { id: filmId },
-        relations: { schedule: true },
+      const schedule = await this.scheduleRepository.findOne({
+        where: { filmId: filmId, id: sessionId },
       });
-      const schedule = film.schedule.find((s) => s.id === sessionId);
       schedule.taken =
         schedule.taken.trim().length === 0
           ? place
           : schedule.taken + `,${place}`;
 
-      this.filmsRepository.save(film);
+      await this.scheduleRepository.save(schedule);
     } catch {
       throw new ConflictException(
         'При сохранении данных о бронировании места произошли ошибки',
