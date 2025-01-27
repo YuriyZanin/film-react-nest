@@ -8,9 +8,7 @@ import { FilmsController } from './films/films.controller';
 import { OrderController } from './order/order.controller';
 import { FilmsService } from './films/films.service';
 import { OrderService } from './order/order.service';
-import { FilmsRepository } from './repository/films.repository';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Film, FilmSchema } from './films/models/film';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
@@ -22,10 +20,9 @@ import { Film, FilmSchema } from './films/models/film';
       rootPath: path.join(__dirname, '..', 'public'),
       renderPath: '/content/afisha/',
     }),
-    MongooseModule.forRoot(configProvider.useValue.database.url),
-    MongooseModule.forFeature([{ name: Film.name, schema: FilmSchema }]),
+    DatabaseModule.register(configProvider.useValue),
   ],
   controllers: [FilmsController, OrderController],
-  providers: [configProvider, FilmsService, OrderService, FilmsRepository],
+  providers: [configProvider, FilmsService, OrderService],
 })
 export class AppModule {}
