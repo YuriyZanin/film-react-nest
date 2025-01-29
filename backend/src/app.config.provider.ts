@@ -15,11 +15,13 @@ export const configProvider = {
       password: applicationConfig.DATABASE_PASSWORD || 'postgres',
       database: applicationConfig.DATABASE_NAME || 'prac',
     },
+    logger: applicationConfig.LOGGER || 'DEV',
   },
 };
 
 export interface AppConfig {
   database: AppConfigDatabase;
+  logger: 'DEV' | 'JSON' | 'TSKV';
 }
 
 export interface AppConfigDatabase {
