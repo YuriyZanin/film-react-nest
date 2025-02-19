@@ -31,7 +31,7 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ github.repository }}/backend:latest
+          tags: ${{ env.REGISTRY }}/yvzanin/backend:latest
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Build and push frontend Docker image
@@ -40,5 +40,5 @@ jobs:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ github.repository }}/frontend:latest
+          tags: ${{ env.REGISTRY }}/yvzanin/frontend:latest
           labels: ${{ steps.meta.outputs.labels }}       
