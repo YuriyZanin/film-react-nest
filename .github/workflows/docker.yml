@@ -32,7 +32,7 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/yuriyzanin/backend:latest
+          tags: ${{ env.REGISTRY }}/yuriyzanin/film-react-nest/backend:latest
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Build and push frontend Docker image
@@ -41,5 +41,5 @@ jobs:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/yuriyzanin/frontend:latest
+          tags: ${{ env.REGISTRY }}/yuriyzanin/film-react-nest/frontend:latest
           labels: ${{ steps.meta.outputs.labels }}       
