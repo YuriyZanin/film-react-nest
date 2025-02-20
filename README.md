@@ -31,7 +31,8 @@ MongoDB должна быть установлена и запущена.
 
 Для проверки отправьте тестовый запрос с помощью Postman или `curl`.
 
-### ССылка на проект
-https://yvzanin.students.nomorepartiesco.ru/
+## Ссылки на проект
+**Frontend**: https://yvzanin.students.nomorepartiesco.ru/  
+**API**: https://api.yvzanin.students.nomorepartiesco.ru/api/afisha/
 
 
